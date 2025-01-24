@@ -35,16 +35,37 @@ class BarGraph extends StatelessWidget {
         satWaterAmt: satWaterAmt);
 
     barData.initBarData();
-    return BarChart(BarChartData(
-        maxY: maxY,
-        minY: 0,
-        barGroups: barData.barData
-            .map((data) => BarChartGroupData(x: data.x, barRods: [
-                  BarChartRodData(
-                    toY: data.y,
-                    color: Colors.lightBlueAccent,
-                  )
-                ]))
-            .toList()));
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: BarChart(BarChartData(
+          maxY: maxY,
+          minY: 0,
+          gridData: FlGridData(show: false),
+          borderData: FlBorderData(show: false),
+          titlesData: FlTitlesData(
+              show: true,
+              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              rightTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              )),
+          barGroups: barData.barData
+              .map((data) => BarChartGroupData(x: data.x, barRods: [
+                    BarChartRodData(
+                        toY: data.y,
+                        color: Colors.lightGreen[700],
+                        width: 23,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(6),
+                          topRight: Radius.circular(6),
+                        ),
+                        backDrawRodData: BackgroundBarChartRodData(
+                          show: true,
+                          toY: maxY,
+                          color: Colors.grey[300],
+                        ))
+                  ]))
+              .toList())),
+    );
   }
 }
