@@ -143,6 +143,29 @@ class _HomePageState extends State<HomePage> {
           onPressed: addWater,
           child: Icon(Icons.add),
         ),
+        drawer: Drawer(
+          child: ListView(
+            children: [
+              DrawerHeader(
+                decoration:
+                    BoxDecoration(color: Theme.of(context).colorScheme.primary),
+                child: Text(
+                  'Water Intake',
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+              ),
+              ListTile(
+                title: Text('Settings'),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text('About'),
+                onTap: () {},
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
