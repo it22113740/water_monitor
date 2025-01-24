@@ -43,6 +43,7 @@ class WaterData extends ChangeNotifier {
       final extratedData = json.decode(response.body) as Map<String, dynamic>;
       for (var element in extratedData.entries) {
         waterDataList.add(WaterModel(
+            id: element.key, // must add this so we can delete the item
             amount: element.value['amount'],
             dateTime: DateTime.parse(element.value['dateTime']),
             unit: element.value['unit']));
@@ -50,5 +51,17 @@ class WaterData extends ChangeNotifier {
     }
     notifyListeners();
     return waterDataList;
+  }
+
+  void delete(WaterModel waterModel) {
+    final url = Uri.https(
+        'water-intaker-6ed8d-default-rtdb.asia-southeast1.firebasedatabase.app',
+        'water/${waterModel.id}.json');
+    http.delete(url);
+
+    //remove the item from the List
+    waterDataList.removeWhere((element) => element.id == waterModel.id);
+
+    notifyListeners();
   }
 }
