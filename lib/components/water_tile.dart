@@ -29,8 +29,8 @@ class WaterTile extends StatelessWidget {
             ),
           ],
         ),
-        subtitle:
-            Text('${waterModel.dateTime.day}/${waterModel.dateTime.month}'),
+        subtitle: Text(
+            '${waterModel.dateTime.day}/${waterModel.dateTime.month}/${waterModel.dateTime.year}'),
         trailing: IconButton(
           icon: Icon(Icons.delete),
           onPressed: () {

@@ -26,7 +26,8 @@ class WaterSummary extends StatelessWidget {
         builder: (context, value, child) => SizedBox(
               height: 200,
               child: BarGraph(
-                maxY: 100,
+                maxY: calculateMaxAmount(value, sunday, monday, tuesday,
+                    wednesday, thursday, friday, saturday),
                 sunWaterAmt: value.calculateDailyWaterSummary()[sunday] ?? 0,
                 monWaterAmt: value.calculateDailyWaterSummary()[monday] ?? 0,
                 tueWaterAmt: value.calculateDailyWaterSummary()[tuesday] ?? 0,
@@ -36,5 +37,34 @@ class WaterSummary extends StatelessWidget {
                 satWaterAmt: value.calculateDailyWaterSummary()[saturday] ?? 0,
               ),
             ));
+  }
+
+  double calculateMaxAmount(
+      WaterData waterData,
+      String sunday,
+      String monday,
+      String tuesday,
+      String wednesday,
+      String thursday,
+      String friday,
+      String saturday) {
+    double? maxAmount = 100;
+    List<double> values = [
+      waterData.calculateDailyWaterSummary()[sunday] ?? 0,
+      waterData.calculateDailyWaterSummary()[monday] ?? 1,
+      waterData.calculateDailyWaterSummary()[tuesday] ?? 2,
+      waterData.calculateDailyWaterSummary()[wednesday] ?? 3,
+      waterData.calculateDailyWaterSummary()[thursday] ?? 4,
+      waterData.calculateDailyWaterSummary()[friday] ?? 5,
+      waterData.calculateDailyWaterSummary()[saturday] ?? 6,
+    ];
+
+    // sort from smallest to largest
+    values.sort();
+
+    // get the largest value
+    //increase the max amount by x% of the largest value
+    maxAmount = values.last * 1.3;
+    return maxAmount == 0 ? 100 : maxAmount;
   }
 }
