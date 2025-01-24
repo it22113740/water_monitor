@@ -1,7 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:water_intake/data/water_data.dart';
+import 'package:water_intake/model/water_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,22 +12,21 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final amountController = TextEditingController();
-  void saveWater(String amount) async {
-    final url = Uri.https(
-        'water-intaker-6ed8d-default-rtdb.asia-southeast1.firebasedatabase.app',
-        'water.json');
-    var response = await http.post(url,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'amount': double.parse(amount),
-          'unit': 'ml',
-          'dateTime': DateTime.now().toString()
-        }));
 
-    if (response.statusCode == 200) {
-      print('Data Saved');
-    } else {
-      print('Data not Saved');
+  @override
+  void initState() {
+    Provider.of<WaterData>(context, listen: false).getWater();
+    super.initState();
+  }
+
+  void saveWater() async {
+    Provider.of<WaterData>(context, listen: false).addWater(WaterModel(
+        amount: double.parse(amountController.text.toString()),
+        dateTime: DateTime.now(),
+        unit: 'ml'));
+
+    if (!context.mounted) {
+      return; //if the widget is not mounted, dont do anything
     }
   }
 
@@ -59,8 +58,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 TextButton(
                   child: Text('Save'),
-                  onPressed: () => {
-                    saveWater(amountController.text),
+                  onPressed: () {
+                    saveWater();
+                    Navigator.of(context).pop();
                   },
                 ),
               ],
@@ -69,22 +69,34 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 4,
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.map),
-            onPressed: () {},
-          )
-        ],
-        title: const Text('Water Intake'),
-      ),
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      floatingActionButton: FloatingActionButton(
-        onPressed: addWater,
-        child: Icon(Icons.add),
+    return Consumer<WaterData>(
+      builder: (context, value, child) => Scaffold(
+        appBar: AppBar(
+          elevation: 4,
+          centerTitle: true,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.map),
+              onPressed: () {},
+            )
+          ],
+          title: const Text('Water Intake'),
+        ),
+        body: ListView.builder(
+          itemCount: value.waterDataList.length,
+          itemBuilder: (context, index) {
+            final waterModel = value.waterDataList[index];
+            return ListTile(
+              title: Text(waterModel.amount.toString()),
+              subtitle: Text(waterModel.id!),
+            );
+          },
+        ),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        floatingActionButton: FloatingActionButton(
+          onPressed: addWater,
+          child: Icon(Icons.add),
+        ),
       ),
     );
   }
