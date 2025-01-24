@@ -115,7 +115,7 @@ class WaterData extends ChangeNotifier {
     // loop through the water data list
     for (var water in waterDataList) {
       String date = convertDateTimeToString(water.dateTime);
-      double amount = double.parse(water.toString());
+      double amount = double.parse(water.amount.toString());
       if (dailyWaterSummary.containsKey(date)) {
         double currentAmount = dailyWaterSummary[date]!;
         currentAmount += amount;
