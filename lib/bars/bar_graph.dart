@@ -48,7 +48,11 @@ class BarGraph extends StatelessWidget {
               leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
               rightTitles: AxisTitles(
                 sideTitles: SideTitles(showTitles: false),
-              )),
+              ),
+              bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: getBottomTitlesWidget))),
           barGroups: barData.barData
               .map((data) => BarChartGroupData(x: data.x, barRods: [
                     BarChartRodData(
@@ -66,6 +70,48 @@ class BarGraph extends StatelessWidget {
                         ))
                   ]))
               .toList())),
+    );
+  }
+
+  Widget getBottomTitlesWidget(double value, TitleMeta meta) {
+    const TextStyle style = TextStyle(
+      color: Color.fromARGB(255, 24, 23, 23),
+      fontWeight: FontWeight.bold,
+      fontSize: 12,
+    );
+    Widget text;
+
+    switch (value.toInt()) {
+      case 0:
+        text = Text('Sun', style: style);
+        break;
+      case 1:
+        text = Text('Mon', style: style);
+        break;
+      case 2:
+        text = Text('Tue', style: style);
+        break;
+      case 3:
+        text = Text('Wed', style: style);
+        break;
+      case 4:
+        text = Text('Thu', style: style);
+        break;
+      case 5:
+        text = Text('Fri', style: style);
+        break;
+      case 6:
+        text = Text('Sat', style: style);
+        break;
+      default:
+        text = const Text('');
+        break;
+    }
+
+    return SideTitleWidget(
+      child: text,
+      space: 3,
+      meta: meta,
     );
   }
 }
